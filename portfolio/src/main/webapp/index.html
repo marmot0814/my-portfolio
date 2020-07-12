@@ -6,16 +6,21 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="getComments()">
     <div id="content">
       <h1>Marmot's Portfolio</h1>
       <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomMessage()">Hello</button>
-      <div id="message-container"></div>
       <button onclick="getRandomQuote()">Hello</button>
       <div id="quote-container"></div>
       <img src="images/stanley-1.jpg"/>
+      <div id="comments-container"></div>
+      <form action="/comment" method="POST">
+        <span>username:</span>
+        <input type="text" name="username" value="anonymous"><br>
+        <span>comment:</span>
+        <input type="text" name="content" value="Hello!"><br>
+        <input type="submit" />
+      </form>
     </div>
   </body>
 </html>
