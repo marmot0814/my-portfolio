@@ -15,12 +15,15 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
-  fetch('/data').then(response => response.text()).then((greeting) => {
-    document.getElementById('greeting-container').innerText = greeting;
-  });
+function addRandomMessage() {
+  fetch('/data')  // sends a request to /my-data-url
+    .then(response => response.json()) // parses the response as JSON
+    .then((messages) => { // now we can reference the fields in myObject!
+      console.log(messages);
+      var message = messages[Math.floor(Math.random() * messages.length)];
+      document.getElementById('message-container').innerText = message;
+    });
 }
-
 
 function getRandomQuote() {
   fetch('/random-quote').then(response => response.text()).then((quote) => {
