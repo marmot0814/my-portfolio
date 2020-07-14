@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomMessage() {
-  fetch('/data')  // sends a request to /my-data-url
-    .then(response => response.json()) // parses the response as JSON
-    .then((messages) => { // now we can reference the fields in myObject!
-      console.log(messages);
-      var message = messages[Math.floor(Math.random() * messages.length)];
-      document.getElementById('message-container').innerText = message;
-    });
-}
-
 function getRandomQuote() {
   fetch('/random-quote').then(response => response.text()).then((quote) => {
     document.getElementById('quote-container').innerText = quote;
   });
+}
+
+function getComments() {
+  fetch('/comment').then(response => response.json()).then((comments) => {
+    const commentsContainer = document.getElementById('comments-container');
+    comments.forEach((comment) => {
+      commentsContainer.appendChild(createCommentElement(comment));
+    });
+  });
+}
+
+function createCommentElement(comment) {
+  const liElement = document.createElement('li');
+  liElement.innerText = comment.username + '[' + comment.timestamp + '] ' + ':' + comment.content;
+  return liElement;
 }
