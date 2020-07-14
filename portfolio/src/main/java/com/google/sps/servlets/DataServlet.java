@@ -40,6 +40,7 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
+
   private String convertToJson(ArrayList<String> messages) {
     String json = "[";
     for (int i = 0 ; i < messages.size() ; i++) {
