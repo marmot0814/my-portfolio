@@ -14,16 +14,23 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.api.core.ApiFuture;
+import com.google.auth.oauth2.GoogleCredentials;
+
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.FirestoreOptions;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
+
 import com.google.sps.data.Comment;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -38,39 +45,53 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
 
-    ArrayList<Comment> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      String username = (String) entity.getProperty("username");
-      String content = (String) entity.getProperty("content");
-      long timestamp = (long) entity.getProperty("timestamp");
+    Firestore db = 
+      FirestoreOptions.getDefaultInstance().toBuilder()
+        .setProjectId("zyang-sps-summer20")
+        .setCredentials(GoogleCredentials.getApplicationDefault())
+        .build().getService();
 
-      Comment comment = new Comment(id, username, content, timestamp);
-      comments.add(comment);
+    try {
+      List<QueryDocumentSnapshot> documents = 
+        db.collection("comments").get().get().getDocuments();
+
+      ArrayList<Comment> comments = new ArrayList<>();
+      for (QueryDocumentSnapshot document : documents) {
+        Comment comment = new Comment(
+          document.getId(),
+          document.getString("username"),
+          document.getString("content"),
+          document.getLong("timestamp")
+        );
+        comments.add(comment);
+      }
+
+      String json = convertToJson(comments);
+      response.setContentType("application/json;");
+      response.getWriter().println(json);
+
+    } catch (Exception e) {
+      System.out.println (e.getMessage());
     }
-
-    String json = convertToJson(comments);
-    response.setContentType("application/json;");
-    response.getWriter().println(json);
   }
   
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String username = request.getParameter("username");
-    String content = request.getParameter("content");
-    long timestamp = System.currentTimeMillis();
 
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("username", username);
-    commentEntity.setProperty("content", content);
-    commentEntity.setProperty("timestamp", timestamp);
+    Firestore db = 
+      FirestoreOptions.getDefaultInstance().toBuilder()
+        .setProjectId("zyang-sps-summer20")
+        .setCredentials(GoogleCredentials.getApplicationDefault())
+        .build().getService();
+    DocumentReference docRef = db.collection("comments").document();
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
+    Map<String, Object> data = new HashMap<>();
+    data.put("username", request.getParameter("username"));
+    data.put("content", request.getParameter("content"));
+    data.put("timestamp", System.currentTimeMillis());
+
+    ApiFuture<WriteResult> result = docRef.set(data);
 
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");

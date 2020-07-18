@@ -17,19 +17,19 @@ package com.google.sps.data;
 /** An item on a todo list. */
 public final class Comment {
 
-  private final long id;
+  private final String id;
   private final String username;
   private final String content;
   private final long timestamp;
 
-  public Comment(long id, String username, String content, long timestamp) {
+  public Comment(String id, String username, String content, long timestamp) {
     this.id = id;
     this.username = username;
     this.content = content;
     this.timestamp = timestamp;
   }
 
-  public long getId() { return this.id; }
+  public String getId() { return this.id; }
   public String getUsername() { return this.username; }
   public String getContent() { return this.content; }
   public long getTimestamp() { return this.timestamp; }
