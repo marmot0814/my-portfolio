@@ -44,6 +44,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/comment")
 public class DataServlet extends HttpServlet {
@@ -86,8 +89,15 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+    UserService userService = UserServiceFactory.getUserService();
+    if (!userService.isUserLoggedIn()) {
+      // Redirect back to the HTML page.
+      response.sendRedirect("/index.html");
+      return ;
+    }
+
     Map<String, Object> data = new HashMap<>();
-    data.put("username", request.getParameter("username"));
+    data.put("username", userService.getCurrentUser().getEmail());
     data.put("content", request.getParameter("content"));
     data.put("timestamp", System.currentTimeMillis());
 

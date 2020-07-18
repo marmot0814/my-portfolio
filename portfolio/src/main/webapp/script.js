@@ -18,6 +18,11 @@ function getRandomQuote() {
   });
 }
 
+function initial() {
+  getUser();
+  getComments();
+}
+
 function getComments() {
   fetch('/comment').then(response => response.json()).then((comments) => {
     const commentsContainer = document.getElementById('comments-container');
@@ -31,4 +36,17 @@ function createCommentElement(comment) {
   const liElement = document.createElement('li');
   liElement.innerText = comment.username + '[' + comment.timestamp + '] ' + ':' + comment.content;
   return liElement;
+}
+
+function getUser() {
+  fetch('/user').then(response => response.json()).then((userStatus) => {
+
+    const user_name = document.getElementById('user-name');
+    const login_logout = document.getElementById('login-logout');
+
+    user_name.innerText = "Hello " + userStatus.username + "!";
+    login_logout.href = userStatus.url;
+    login_logout.innerText = userStatus.loginLogoutAction;
+
+  });
 }
