@@ -19,13 +19,16 @@ function getRandomQuote() {
 }
 
 function initial() {
-  getUser();
   getComments();
+  getUser();
 }
 
 function getComments() {
   fetch('/comment').then(response => response.json()).then((comments) => {
     const commentsContainer = document.getElementById('comments-container');
+    const title = document.createElement('h3');
+    title.innerText = comments.length + " Comment" + (comments.length > 1 ? "s" : "");
+    commentsContainer.appendChild(title);
     comments.forEach((comment) => {
       commentsContainer.appendChild(createCommentElement(comment));
     });
@@ -33,20 +36,45 @@ function getComments() {
 }
 
 function createCommentElement(comment) {
-  const liElement = document.createElement('li');
-  liElement.innerText = comment.username + '[' + comment.timestamp + '] ' + ':' + comment.content;
-  return liElement;
+  const aElement = document.createElement('a');
+  aElement.className = "list-group-item";
+  aElement.href = "#";
+
+  const timeElement = document.createElement('span');
+  timeElement.className = "label label-default";
+  timeElement.innerText = comment.timestamp;
+
+  const usernameElement = document.createElement('h4');
+  usernameElement.className = "list-group-item-heading";
+  usernameElement.innerText = comment.username;
+
+  const contentElement = document.createElement('p');
+  contentElement.className = "list-group-item-text";
+  contentElement.innerText = comment.content;
+
+  aElement.appendChild(usernameElement);
+  aElement.appendChild(timeElement);
+  aElement.appendChild(contentElement);
+
+  return aElement;
 }
 
 function getUser() {
   fetch('/user').then(response => response.json()).then((userStatus) => {
-
     const user_name = document.getElementById('user-name');
     const login_logout = document.getElementById('login-logout');
 
-    user_name.innerText = "Hello " + userStatus.username + "!";
+    user_name.innerText = userStatus.username;
     login_logout.href = userStatus.url;
     login_logout.innerText = userStatus.loginLogoutAction;
 
+    if (userStatus.loginLogoutAction == "Logout") {
+      const commentInputField = document.getElementById('comment-input-field');
+      commentInputField.hidden = false;
+    }
+    if (userStatus.loginLogoutAction == "Login") {
+      const commentInputField = document.getElementById('login-alert');
+      commentInputField.hidden = false;
+    }
   });
 }
