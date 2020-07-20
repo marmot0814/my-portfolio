@@ -29,6 +29,8 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
 
+import com.google.gson.Gson;
+
 import com.google.sps.data.Comment;
 
 import java.io.IOException;
@@ -63,7 +65,7 @@ public class DataServlet extends HttpServlet {
     try {
       ApiFuture<QuerySnapshot> querySnapshot = 
         db.collection("comments")
-          .orderBy("timestamp", Direction.DESCENDING)
+          .orderBy("timestamp")
           .get();
 
       ArrayList<Comment> comments = new ArrayList<>();
@@ -72,18 +74,25 @@ public class DataServlet extends HttpServlet {
           document.getId(),
           document.getString("username"),
           document.getString("content"),
-          document.getLong("timestamp")
+          timestampToString(document.getLong("timestamp"))
         );
         comments.add(comment);
       }
 
-      String json = convertToJson(comments);
       response.setContentType("application/json;");
-      response.getWriter().println(json);
+      response.setCharacterEncoding("UTF-8");
+      response.getWriter().println(new Gson().toJson(comments));
 
     } catch (Exception e) {
       System.out.println (e.getMessage());
     }
+    
+  }
+
+  private String timestampToString(long timestamp) {
+    Timestamp ts = new Timestamp(timestamp);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    return formatter.format(ts);
   }
   
   @Override
@@ -112,27 +121,5 @@ public class DataServlet extends HttpServlet {
 
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
-  }
-
-  private String timestampToString(long timestamp) {
-    Timestamp ts = new Timestamp(timestamp);
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    return formatter.format(ts);
-  }
-
-  private String convertToJson(ArrayList<Comment> comments) {
-    String json = "[";
-    int tot = comments.size();
-    for (int i = 0 ; i < tot ; i++) {
-      json += "{";
-      json += "\"username\": \"" + comments.get(i).getUsername() + "\",";
-      json += "\"content\": \"" + comments.get(i).getContent() + "\",";
-      json += "\"timestamp\": \"" + timestampToString(comments.get(i).getTimestamp()) + "\"";
-      json += "}";
-      if (i + 1 != tot)
-        json += ",";
-    }
-    json += "]";
-    return json;
   }
 }

@@ -20,9 +20,9 @@ public final class Comment {
   private final String id;
   private final String username;
   private final String content;
-  private final long timestamp;
+  private final String timestamp;
 
-  public Comment(String id, String username, String content, long timestamp) {
+  public Comment(String id, String username, String content, String timestamp) {
     this.id = id;
     this.username = username;
     this.content = content;
@@ -32,5 +32,5 @@ public final class Comment {
   public String getId() { return this.id; }
   public String getUsername() { return this.username; }
   public String getContent() { return this.content; }
-  public long getTimestamp() { return this.timestamp; }
+  public String getTimestamp() { return this.timestamp; }
 }

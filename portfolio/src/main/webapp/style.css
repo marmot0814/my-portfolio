@@ -7,3 +7,11 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.icon {
+  margin: 5px;
+}

@@ -3,26 +3,113 @@
   <head>
     <meta charset="UTF-8">
     <title>Marmot's Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" >
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://bootswatch.com/3/cyborg/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://jablon.me/bootstrap-milestones/dist/bootstrap-milestones.min.css">
+
   </head>
   <body onload="initial()">
-    <div id="user-container">
-      <div id="user-name"></div>
-      <a id="login-logout"></a>
-    </div>
-    <div id="content">
-      <h1>Marmot's Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <button onclick="getRandomQuote()">Hello</button>
-      <div id="quote-container"></div>
-      <img src="images/stanley-1.jpg"/>
-      <form action="/comment" method="POST">
-        <span>comment:</span>
-        <input type="text" name="content" value="Hello!"><br>
-        <input type="submit" />
+    <div style="height: 70px; width: 100%"></div>
+    <nav class="navbar navbar-inverse" style="position: fixed;top: 0;width: 100%;z-index: 999;">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Zheng-Dao Yang's Portfolio</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" id="user-name"></a></li>
+            <li><a href="#" id="login-logout">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>Zheng-Dao Yang's Portfolio</h1>
+        <p>marmot0814</p>
+        <a href="mailto:marmot0814.cs06@nctu.edu.tw" class="icon"><img src="images/email.png" alt="email"></a>
+        <a href="https://github.com/marmot0814" class="icon"><img src="images/github.png" alt="email"></a>
+        <a href="https://codeforces.com/profile/marmot0814" class="icon"><img src="images/CF.png" alt="email"></a>
+      </div>
+      <div class="jumbotron">
+        <h3>Welcome to my Portfolio!</h3>
+        <p>I'm a senior from National Chiao Tung University. I'm interested in algorithm and table tennis.</p>
+      </div>
+      <div class="jumbotron">
+        <h3>Milestone</h3>
+        <ul class="milestones">
+          <li style="border-bottom: 0px">
+            <i class="milestone-primary glyphicon glyphicon-education"></i>
+            <span class="label label-primary" style="float:right">2017/09</span>
+            <h6>NCTU Computer Science Department student</h6>
+          </li>
+          <li style="border-bottom: 0px">
+            <i class="milestone-primary	glyphicon glyphicon-flag"></i>
+            <span class="label label-primary" style="float:right">2018/05</span>
+            <h6>NCTU PCCA Member</h6>
+            <p style="font-size: 14px">Competitive Programing Club in NCTU</p>
+          </li>
+          <li style="border-bottom: 0px">
+            <i class="milestone-primary	glyphicon glyphicon-flag"></i>
+            <span class="label label-primary" style="float:right">2018/06</span>
+            <h6>NCTU DiniDino FrontEnd team</h6>
+            <p style="font-size: 14px">Assistant System in NCTUCS</p>
+          </li>
+          <li style="border-bottom: 0px">
+            <i class="milestone-primary	glyphicon glyphicon-globe"></i>
+            <span class="label label-primary" style="float:right">2018/12</span>
+            <h6>2018 ICPC Asia Singapore Regional Contest</h6>
+          </li>
+          <li style="border-bottom: 0px">
+            <i class="milestone-primary	glyphicon glyphicon-user"></i>
+            <span class="label label-primary" style="float:right">2019/01</span>
+            <h6>NCTU PCCA Club Leader</h6>
+          </li>
+          <li style="border-bottom: 0px">
+            <i class="milestone-primary	glyphicon glyphicon-globe"></i>
+            <span class="label label-primary" style="float:right">2019/09</span>
+            <h6>2019 Moscow ICPC International Workshop</h6>
+          </li>
+          <li style="border-bottom: 0px">
+            <i class="milestone-primary	glyphicon glyphicon-globe"></i>
+            <span class="label label-primary" style="float:right">2019/10</span>
+            <h6>2019 ICPC Asia Jakarta Regional Contest</h6>
+          </li>
+          <li style="border-bottom: 0px">
+            <i class="milestone-primary	glyphicon glyphicon-flag"></i>
+            <span class="label label-primary" style="float:right">2019/10</span>
+            <h6>NCTU MAPL Member</h6>
+            <p style="font-size: 14px">Multimedia Architecture and Processing Laboratory</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="list-group" id="comments-container"></div>
+      <br>
+      <div style="text-align: center" id="login-alert" hidden="true"><h5>Please <a href='#' id='login-warning'>login</a> to comment</h5></div>
+      <form class="form-horizontal" action="/comment" method="POST" id='comment-input-field' hidden="true">
+        <fieldset>
+          <div class="form-group">
+            <label for="textArea" class="col-1 control-label">Leave some comments</label>
+            <div class="col-12">
+              <textarea class="form-control" rows="5" id="textArea" name="content"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary" style="float:right">Submit</button>
+            </div>
+          </div>
+        </fieldset>
       </form>
-      <div id="comments-container"></div>
     </div>
+    <div style="height: 40px; width: 100%"></div>
   </body>
 </html>
