@@ -6,7 +6,11 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body onload="getComments()">
+  <body onload="initial()">
+    <div id="user-container">
+      <div id="user-name"></div>
+      <a id="login-logout"></a>
+    </div>
     <div id="content">
       <h1>Marmot's Portfolio</h1>
       <p>This is my portfolio.</p>
@@ -14,8 +18,6 @@
       <div id="quote-container"></div>
       <img src="images/stanley-1.jpg"/>
       <form action="/comment" method="POST">
-        <span>username:</span>
-        <input type="text" name="username" value="anonymous"><br>
         <span>comment:</span>
         <input type="text" name="content" value="Hello!"><br>
         <input type="submit" />
