@@ -41,8 +41,9 @@ function createCommentElement(comment) {
   aElement.href = "#";
 
   const timeElement = document.createElement('span');
-  timeElement.className = "label label-default";
+  timeElement.className = "label label-primary";
   timeElement.innerText = comment.timestamp;
+  timeElement.style.float = "right";
 
   const usernameElement = document.createElement('h4');
   usernameElement.className = "list-group-item-heading";
@@ -52,8 +53,8 @@ function createCommentElement(comment) {
   contentElement.className = "list-group-item-text";
   contentElement.innerText = comment.content;
 
-  aElement.appendChild(usernameElement);
   aElement.appendChild(timeElement);
+  aElement.appendChild(usernameElement);
   aElement.appendChild(contentElement);
 
   return aElement;
@@ -68,6 +69,7 @@ function getUser() {
     login_logout.href = userStatus.url;
     login_logout.innerText = userStatus.loginLogoutAction;
 
+
     if (userStatus.loginLogoutAction == "Logout") {
       const commentInputField = document.getElementById('comment-input-field');
       commentInputField.hidden = false;
@@ -75,6 +77,9 @@ function getUser() {
     if (userStatus.loginLogoutAction == "Login") {
       const commentInputField = document.getElementById('login-alert');
       commentInputField.hidden = false;
+
+      const loginWarning = document.getElementById('login-warning');
+      loginWarning.href = userStatus.url;
     }
   });
 }
